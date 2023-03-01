@@ -1,0 +1,81 @@
+---
+title: 'Adding Prism to a Next.js project'
+date: '2023-01-04'
+lastmod: '2023-01-04'
+tags: ['next-js', 'prism', 'guide']
+draft: false
+summary: 'This blog post explains how to install and use Prism, a syntax highlighter, in a Next.js project. It provides a step-by-step guide for installing Prism, importing its CSS styles, using it in components, and rendering code blocks with syntax highlighting. The post also includes code snippets for each step, making it easy to follow along.'
+images: ['/static/images/canada/mountains.jpg', '/static/images/canada/toronto.jpg']
+authors: ['default', 'sparrowhawk']
+---
+
+Prism is a lightweight, extensible syntax highlighter, that is widely used for highlighting syntax for various programming languages. Next.js is a popular framework for building server-side-rendered React applications. In this blog post, we will guide you through the process of installing and using Prism in a Next.js project.
+
+To install Prism, we can use npm or yarn. Open your terminal and navigate to your project directory. Then, type the following command:
+
+```bash
+npm install prismjs
+```
+
+This command will install Prism and add it to your project dependencies.
+
+Step 2: Import Prism styles
+
+To make Prism work properly, we need to import its CSS styles. There are different ways to do this, but in this tutorial, we will use the CDN version of the Prism styles. Open your pages/\_app.js file and add the following code:
+
+```jsx
+import 'prismjs/themes/prism-tomorrow.css'
+import '../styles/globals.css'
+
+function MyApp({ Component, pageProps }) {
+  return <Component {...pageProps} />
+}
+
+export default MyApp
+```
+
+Here, we imported the prism-tomorrow.css file, which is one of the built-in Prism themes. You can choose a different theme from the Prism website and replace the CSS file path accordingly. We also imported the globals.css file, which is the default global stylesheet for Next.js projects.
+
+Step 3: Use Prism in your components
+
+Now that we have installed and imported Prism, we can use it in our components. For example, let's say we have a component named CodeBlock that renders a code block with syntax highlighting. Here's how we can use Prism in this component:
+
+```jsx
+import Prism from 'prismjs'
+
+function CodeBlock({ code, language }) {
+  const html = Prism.highlight(code, Prism.languages[language], language)
+
+  return (
+    <pre>
+      <code dangerouslySetInnerHTML={{ __html: html }} />
+    </pre>
+  )
+}
+```
+
+Here, we imported Prism and used its highlight method to highlight the code parameter using the language specified in the language parameter. We then returned the highlighted code as an HTML string, using the dangerouslySetInnerHTML prop to avoid React escaping the HTML code.
+
+Step 4: Use the CodeBlock component
+
+To use the CodeBlock component, we can import it into our pages and pass the code and language props to it. For example:
+
+```jsx
+import CodeBlock from '../components/CodeBlock'
+
+function HomePage() {
+  return (
+    <div>
+      <CodeBlock code="const message = 'Hello, world!'" language="javascript" />
+    </div>
+  )
+}
+
+export default HomePage
+```
+
+This will render a code block with syntax highlighting for JavaScript.
+
+Conclusion
+
+In this blog post, we have shown you how to install and use Prism in a Next.js project. With Prism, you can easily add syntax highlighting to your code blocks, making them more readable and understandable. We hope you found this tutorial helpful and that you will start using Prism in your Next.js projects.

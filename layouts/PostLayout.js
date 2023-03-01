@@ -30,6 +30,7 @@ export default function PostLayout({ frontMatter, authorDetails, next, prev, chi
       <article>
         <div className="xl:divide-y xl:divide-gray-200 xl:dark:divide-gray-700">
           <header className="pt-6 xl:pb-6">
+            <Image src={images[0]} width={1600} height={900} className="rounded-lg" />
             <div className="space-y-1 text-center">
               <dl className="space-y-10">
                 <div>
