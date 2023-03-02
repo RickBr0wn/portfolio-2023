@@ -1,0 +1,156 @@
+---
+title: 'React Context API'
+date: '2023-01-11'
+lastmod: '2023-01-04'
+tags: ['react', 'guide']
+draft: false
+summary: 'The React.Context API allows you to pass data through the component tree without having to pass props down through each level of the tree. This can help simplify your code and reduce the number of props that need to be passed around.'
+images: ['/static/images/canada/mountains.jpg', '/static/images/canada/toronto.jpg']
+authors: ['default']
+---
+
+The React Context API allows you to pass data through the component tree without having to pass props down through each level of the tree. This can help simplify your code and reduce the number of props that need to be passed around. In this blog post, we will explore how to use the React Context API with TypeScript.
+
+## The problem
+
+Firstly, lets discuss the problem that the Context API solves. Lets consider this contrived example:
+
+```typescript
+<WrapperFive>
+  <WrapperFour>
+    <WrapperThree>
+      <WrapperTwo>
+        <WrapperOne>
+          <InnerComponent />
+        </WrapperOne>
+      </WrapperTwo>
+    </WrapperThree>
+  </WrapperFour>
+</WrapperFive>
+```
+
+Now lets imagine that `WrapperFive` is the component that holds the state. But It is `InnerComponent` that requires the state. This is called `prop drilling`. Each `Wrapper` from `Four` onwards recieves the state as a prop and passes to its child component. This can get difficult to maintain pretty quickly, because if you add or remove a prop, each `Wrapper` in the component tree needs to also be updated.
+
+```typescript
+<WrapperFive>
+  const state = useState()
+  <WrapperFour state={state}>
+    <WrapperThree state={state}>
+      <WrapperTwo state={state}>
+        <WrapperOne state={state}>
+          <InnerComponent state={state} />
+        </WrapperOne>
+      </WrapperTwo>
+    </WrapperThree>
+  </WrapperFour>
+</WrapperFive>
+```
+
+Using the Context API can avoid this. The state can be injected directly into `InnerComponent` without passing through any `Wrapper`.
+
+## Defining a Context
+
+To use the React.Context API, you need to define a context object. This can be done using the `createContext` function provided by React. Here is an example:
+
+```typescript
+interface User {
+  name: string
+  email: string
+}
+
+interface UserContext {
+  user: User | null
+	isLoading: boolean
+	error?: Error
+}
+
+interface UserProviderProps {
+  children: React.ReactNode
+}
+
+const UserContext = React.createContext<UserContext>({} as UserContext)
+
+const UserProvider = ({ children }): JSX.Element => {
+  const [user, setUser] = React.useState<User | null>(null)
+	const [isLoading, setIsLoading] = React.useState<boolean>(true)
+	const [error, setError] = React.useState<Error | null>(null)
+
+  setIsLoading(true)
+
+  // do some database stuff to to authenticate the user
+  // if an error occurs pass it using the `setError` function
+  // once authenticated use the `setUser` function to add the `user`
+
+  isLoading(false)
+
+  const value: UserContext = {
+    user, isLoading, error
+  }
+
+  <UserContext.Provider value={value}>{children}</UserContext>
+}
+```
+
+We use `React.createContext` to instantiate a `UserContext` object that will contain a user, a isLoading boolean and an optional error. This information is collated together into the `value`. This `value` is then passed to the `UserContext.Provider>` as a prop. It will now be avaiable throughout the component tree.
+
+Notice we are not exporting this `UserContext`. To prevent the consumer having direct access to the context, this helpful custom hook is exposed instead:
+
+```typescript
+export function useUser(): User {
+  const context = React.useContext(UserContext)
+  if (!context) {
+    throw new Error('useUser must be used within an UserProvider')
+  }
+  return context
+}
+```
+
+## Using the `UserContext`
+
+Before we can access the contexts `value` property from directly inside the child component, the app must be wrapped in the `UserContext.Provider`:
+
+```typescript
+  import { UserProvider } from ...
+
+  <UserProvider>
+    <WrapperFive>
+      <WrapperFour>
+        <WrapperThree>
+          <WrapperTwo>
+            <WrapperOne>
+              <InnerComponent />
+            </WrapperOne>
+          </WrapperTwo>
+        </WrapperThree>
+      </WrapperFour>
+    </WrapperFive>
+  </UserProvider>
+```
+
+Our `InnerComponent` can now directly access the context using the handy custom hook we exposed:
+
+```typescript
+const InnerComponent = () => {
+  const { user, isLoading, error } = useUser()
+
+  if (isLoading) return <h1>Loading...</h1>
+
+  if (errror) throw new Error('there has been an error! ' + error.message)
+
+  if (!user) return <h1>Not Authenticated</h1>
+
+  return <h1>Welcome back {user.name}</h1>
+}
+```
+
+We can then simply use the `useUser` hook to get the user from the `UserContext` from anywhere within the component tree. And whenever the context is update (for example: if the user logs out), then the Context API will update all of the components simultaneously.
+
+## TypeScript Benefits
+
+One of the main benefits of using TypeScript with the React.Context API is that it can help you catch errors at compile time. TypeScript will check that you are using the context values correctly, and will warn you if you are trying to access a value that does not exist in the context.
+
+For example, if we had tried to access a property on the user object that did not exist, TypeScript would have warned us with an error message. This can help catch errors early and make your code more robust.
+
+## Conclusion
+
+The React.Context API can be a powerful tool for passing data through your component tree. When used with TypeScript, it can help catch errors at compile time and make your code more robust. By defining a context object and using the useContext hook, you can easily pass data between components without having to pass props down through each level of the tree.
