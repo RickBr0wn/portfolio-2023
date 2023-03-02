@@ -1,12 +1,12 @@
 ---
 title: 'Adding Prism to a Next.js project'
 date: '2023-01-04'
-lastmod: '2023-01-04'
+lastmod: '2023-01-11'
 tags: ['next-js', 'prism', 'guide']
 draft: false
 summary: 'This blog post explains how to install and use Prism, a syntax highlighter, in a Next.js project. It provides a step-by-step guide for installing Prism, importing its CSS styles, using it in components, and rendering code blocks with syntax highlighting. The post also includes code snippets for each step, making it easy to follow along.'
-images: ['/static/images/canada/mountains.jpg', '/static/images/canada/toronto.jpg']
-authors: ['default', 'sparrowhawk']
+images: ['https://d2d4rtarj3og8s.cloudfront.net/prism.jpg']
+authors: ['default']
 ---
 
 Prism is a lightweight, extensible syntax highlighter, that is widely used for highlighting syntax for various programming languages. Next.js is a popular framework for building server-side-rendered React applications. In this blog post, we will guide you through the process of installing and using Prism in a Next.js project.
@@ -19,7 +19,7 @@ npm install prismjs
 
 This command will install Prism and add it to your project dependencies.
 
-Step 2: Import Prism styles
+## Import Prism styles
 
 To make Prism work properly, we need to import its CSS styles. There are different ways to do this, but in this tutorial, we will use the CDN version of the Prism styles. Open your pages/\_app.js file and add the following code:
 
@@ -36,7 +36,7 @@ export default MyApp
 
 Here, we imported the prism-tomorrow.css file, which is one of the built-in Prism themes. You can choose a different theme from the Prism website and replace the CSS file path accordingly. We also imported the globals.css file, which is the default global stylesheet for Next.js projects.
 
-Step 3: Use Prism in your components
+## Use Prism in your components
 
 Now that we have installed and imported Prism, we can use it in our components. For example, let's say we have a component named CodeBlock that renders a code block with syntax highlighting. Here's how we can use Prism in this component:
 
@@ -56,7 +56,7 @@ function CodeBlock({ code, language }) {
 
 Here, we imported Prism and used its highlight method to highlight the code parameter using the language specified in the language parameter. We then returned the highlighted code as an HTML string, using the dangerouslySetInnerHTML prop to avoid React escaping the HTML code.
 
-Step 4: Use the CodeBlock component
+## Use the CodeBlock component
 
 To use the CodeBlock component, we can import it into our pages and pass the code and language props to it. For example:
 
