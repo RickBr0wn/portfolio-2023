@@ -1,8 +1,8 @@
 ---
-title: 'React Context API'
+title: 'The React Context API'
 date: '2023-01-11'
 lastmod: '2023-01-04'
-tags: ['react', 'guide']
+tags: ['react', 'typescript', 'guide']
 draft: false
 summary: 'The React.Context API allows you to pass data through the component tree without having to pass props down through each level of the tree. This can help simplify your code and reduce the number of props that need to be passed around.'
 images: ['/static/images/canada/mountains.jpg', '/static/images/canada/toronto.jpg']
@@ -91,7 +91,7 @@ const UserProvider = ({ children }): JSX.Element => {
 }
 ```
 
-We use `React.createContext` to instantiate a `UserContext` object that will contain a user, a isLoading boolean and an optional error. This information is collated together into the `value`. This `value` is then passed to the `UserContext.Provider>` as a prop. It will now be avaiable throughout the component tree.
+We use `React.createContext` to instantiate a `UserContext` object that will contain a user, a isLoading boolean and an optional error. This information is collated together into the `value`. This `value` is then passed to the `UserContext.Provider` as a prop. It will now be avaiable throughout the component tree.
 
 Notice we are not exporting this `UserContext`. To prevent the consumer having direct access to the context, this helpful custom hook is exposed instead:
 
@@ -151,6 +151,6 @@ One of the main benefits of using TypeScript with the React.Context API is that 
 
 For example, if we had tried to access a property on the user object that did not exist, TypeScript would have warned us with an error message. This can help catch errors early and make your code more robust.
 
-## Conclusion
+## Conclusion
 
 The React.Context API can be a powerful tool for passing data through your component tree. When used with TypeScript, it can help catch errors at compile time and make your code more robust. By defining a context object and using the useContext hook, you can easily pass data between components without having to pass props down through each level of the tree.
